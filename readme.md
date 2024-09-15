@@ -88,7 +88,7 @@ _(this section is largely subjective)_
 
 ### Signals Standard
 
-After putting this comparison together, I feel even more strongly that this ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). Maybe that's just confirmation bias at work, but there's just so much duplicated work across these libs that's not interoperable, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for this ecosystem. 💯
+After putting this comparison together, I feel even more strongly that this ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). Maybe that's just confirmation bias at work, but there's so much duplicated work across these libs that's not interoperable, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for the ecosystem. 💯
 
 ### Performance
 
