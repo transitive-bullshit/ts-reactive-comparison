@@ -6,6 +6,7 @@
 - [Benchmark Results](#benchmark-results)
 - [Takeaways](#takeaways)
   - [Signals Standard](#signals-standard)
+  - [Performance](#performance)
   - [Preact Signals](#preact-signals)
   - [Vue's Reactivity](#vues-reactivity)
   - [MobX](#mobx)
@@ -50,12 +51,12 @@ This has the potential to greatly change how the majority of state management is
 | [Valtio](https://github.com/pmndrs/valtio)                                        | ✅                  | ❌                       | ❌               | ✅                                                         | ❌                                   | [7kb](https://pkg-size.dev/valtio)               |
 | [NanoStores](https://github.com/nanostores/nanostores)[^nanostores]               | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [4kb](https://pkg-size.dev/nanostores)           |
 
-I also considered other reactive libraries such as [cellx](https://github.com/Riim/cellx), [reactively](https://github.com/milomg/reactively), [Glimmer's tracked](https://github.com/tracked-tools/tracked-built-ins), [RxJS](https://rxjs.dev), [Starbeam](https://www.starbeamjs.com), [S.js](https://github.com/adamhaile/S), [compostate](https://github.com/lxsmnsyc/compostate), [uSignal](https://github.com/WebReflection/usignal), [Svelte's reactivity](https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/internal/client/reactivity/sources.js)[^svelte-reactivity], [Pota](https://github.com/potahtml/pota), [Kairo](https://github.com/3Shain/kairo), [Compostate](https://github.com/lxsmnsyc/compostate), [mol wire](https://www.npmjs.com/package/mol_wire_lib), [Oby](https://github.com/vobyjs/oby), [Reactively](https://github.com/milomg/reactively), and more, but didn't include them above because they are either not actively maintained, don't support TypeScript, or are not close enough to the signals proposal to warrant comparison.
+I also considered other reactive libraries such as [cellx](https://github.com/Riim/cellx), [reactively](https://github.com/milomg/reactively), [Glimmer's tracked](https://github.com/tracked-tools/tracked-built-ins), [RxJS](https://rxjs.dev), [Starbeam](https://www.starbeamjs.com), [S.js](https://github.com/adamhaile/S), [compostate](https://github.com/lxsmnsyc/compostate), [uSignal](https://github.com/WebReflection/usignal), [Svelte's reactivity](https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/internal/client/reactivity/sources.js)[^svelte-reactivity], [Pota](https://github.com/potahtml/pota), [Kairo](https://github.com/3Shain/kairo), [Compostate](https://github.com/lxsmnsyc/compostate), [mol wire](https://www.npmjs.com/package/mol_wire_lib), [Oby](https://github.com/vobyjs/oby), and more, but didn't include them above because they are either not actively maintained, don't support TypeScript, or are not close enough to the signals proposal to warrant comparison.
 
 Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoStores](https://github.com/nanostores/nanostores), and [Jotai](https://jotai.org) don't automatically track dependencies referenced inside of computed properties and effects, which imho makes their relative DX significantly more cumbersome and from my benchmarks, not any faster. The same can also be said for React's own [useEffect](https://react.dev/reference/react/useEffect), which requires the developer to manually declare an effect's dependencies. [Ain't nobody got time for that](https://youtu.be/waEC-8GFTP4?t=25).
 
 > [!NOTE]
-> Did I miss your favorite reactive library, or did I get something wrong on here? [Create an issue](https://github.com/transitive-bullshit/ts-reactive-comparison/issues/new) to let me know 🙂
+> Did I miss your favorite reactive library, or did I get something wrong? [Create an issue](https://github.com/transitive-bullshit/ts-reactive-comparison/issues/new) to let me know 🙂
 
 [^standalone-usage]: Standalone usage refers to how easy it is to use just the reactivity functionality of the library as an isolated package – without being tied to any specific frontend libraries ala React, Vue, Svelte, etc.
 [^signal-utils]: While the official [Signals Proposal](https://github.com/proposal-signals/signal-polyfill) focuses on core dependency tracking of shallow signals, its sister project [signal-utils](https://github.com/proposal-signals/signal-utils) offers support for deep, Proxy-based tracking.
@@ -88,6 +89,14 @@ _(this section is largely subjective)_
 ### Signals Standard
 
 After putting this comparison together, I feel even more strongly that this ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). There's just so much duplicated work that's not interoperable, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for this ecosystem. 💯
+
+### Performance
+
+All of the reactive libs offer approximately similar performance on the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update) with a few outliers.
+
+On the negative side of perf, we have [Angular Signals](https://angular.dev/guide/signals) and [signal-polyfill](https://github.com/proposal-signals/signal-polyfill). I'm not surprised that the Signals standard's polyfill has significantly worse perf since it's more of a proof-of-concept and explicitly not production ready. I was surprised, however, at how poorly the perf was of Angular Signals, which is presumably backed by a large team of seasoned Google engineers.
+
+On th positive side of perf, [Reactively](https://github.com/milomg/reactively) was the fastest by far, which makes sense given that the author [@milomg](https://github.com/milomg) also authored most of the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update). It's a shame that the library hasn't been adopted by any team that I'm aware of which could help with maintenance, but maybe the Signals standard can take some inspiration from Reactively's seemingly more efficient implementation going forwards.
 
 ### Preact Signals
 
