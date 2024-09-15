@@ -22,7 +22,7 @@ Goals for this deep dive:
 
 ## TC39 Signals Proposal
 
-**The [TC39 Signals Proposal](https://github.com/tc39/proposal-signals) aims to add a standard reactive signals primitive to JavaScript.** 🔥
+**[The TC39 Signals Proposal](https://github.com/tc39/proposal-signals) aims to add a standard reactive Signal primitive to JavaScript.** 🔥
 
 This has the potential to greatly change how the majority of state management is handled across JS/TS, just like when `Promise` was introduced as a TC39 standard back in 2015.
 
@@ -68,15 +68,19 @@ These results are from [my fork](https://github.com/transitive-bullshit/js-react
 
 Note that MobX and Valtio are not included in the average results summary because they fail to run some of the benchmark tests. Some of the other reactive libraries are missing from the benchmark because they either don't support standalone usage or because they didn't support the benchmark's abstract signals abstraction.
 
+Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be very interesting to compare performance of deeply reactive objects / arrays / `Map` / `Set` objects.
+
 These results were last updated _September 2024_ on an M3 Macbook Pro.
 
 ## Takeaways
 
-1. The ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill).
+1. The ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). There's just so much duplicated work, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for this ecosystem. 💯
 
-2. Several projects have used [Preact Signals](https://github.com/preactjs/signals) as an unofficial standard to build off of because it is lightweight, efficient, and thoroughly tested. Out of all the shallow, standalone reactive libraries out there, it is imho the best one in terms of DX and maturity. The only real downside is that it doesn't officially support deep reactivity, which I've found to be extremely valuable as an opt-in feature for real-world usage. There are several projects[^preact-deep-signals] which add deep signal support via Proxies, but they are less mature and not backed by a large team, meaning that they'd be riskier to depend upon in the long run.
+2. Several projects have used [Preact Signals](https://github.com/preactjs/signals) as a sort of unofficial standard to build off of because it is lightweight, efficient, and thoroughly tested. **Out of all the shallow, standalone reactive libraries out there, it is imho the best one in terms of DX and maturity**. The only real downside is that it doesn't officially support deep reactivity, which I've found to be extremely valuable as an opt-in feature for real-world usage, especially when using reactivity outside of frontend use cases (like game engines). There are several projects[^preact-deep-signals] which add deep signal support to `@preact/signals-core` via Proxies, but they are less mature and not backed by a large team, meaning that they'd be riskier to depend on in the long run.
 
-3. [Vue's reactivity system]([Vue Reactivity](https://vuejs.org/guide/essentials/reactivity-fundamentals.html)) (`@vue/reactivity`) is imho the most mature and well-maintained, signals implementation supporting deep + shallow tracking and standalone usage.
+3. [Vue's reactivity](https://vuejs.org/guide/essentials/reactivity-fundamentals.html) (`@vue/reactivity`) is imho the most mature and well-maintained TypeScript signals implementation which supports both deep + shallow tracking along with standalone usage. Naming-wise, I don't really like `ref` as a name for `signal` especially because refs already have a well-defined meaning in React land, but this is a minor nit. **Overall, I really like `@vue/reactivity` and will be using it as a base for my work going forwards** until the TC39 Signals Proposal is mature enough to use as a replacement.
+
+4. One important design decision is whether to provide direct access to reactive values (like Vue's [reactive](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#reactive)) or to wrap the reactive value in an accessor (like Vue's [ref](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#ref)). Most reactive libs wrap values in an accessor, even though it makes the DX slightly worse, and [Vue's docs have a great explanation for why](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#limitations-of-reactive). Reactive wrappers generally provide access to the underlying value using one of the following: `wrapper.get()`, `wrapper.value`, `get(wrapper)`, or `wrapper()`, and some support automatic unwrapping when used in JSX or templates and/or at compile-time (like Svelte). ([more info on this pattern from signia](https://signia.tldraw.dev/docs/what-are-signals#how-do-you-access-the-value-of-a-signal))
 
 ## What are Signals?
 
