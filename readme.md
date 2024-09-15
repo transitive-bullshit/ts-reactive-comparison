@@ -96,7 +96,9 @@ All of the reactive libs offer approximately similar performance on the [benchma
 
 On the negative side of perf, we have [Angular Signals](https://angular.dev/guide/signals) and [signal-polyfill](https://github.com/proposal-signals/signal-polyfill). I'm not surprised that the Signals standard's polyfill has significantly worse perf since it's more of a proof-of-concept and explicitly not production ready. I was surprised, however, at how poorly the perf was of Angular Signals, which is presumably backed by a large team of seasoned Google engineers.
 
-On th positive side of perf, [Reactively](https://github.com/milomg/reactively) was the fastest by far, which makes sense given that the author [@milomg](https://github.com/milomg) also authored most of the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update). It's a shame that the library hasn't been adopted by any team that I'm aware of which could help with maintenance, but maybe the Signals standard can take some inspiration from Reactively's seemingly more efficient implementation going forwards.
+On the positive side of perf, [Reactively](https://github.com/milomg/reactively) was the fastest by far, which makes sense given that the author [@milomg](https://github.com/milomg) also authored most of the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update). It's a shame that the library hasn't been adopted by any team that I'm aware of which could help with maintenance, but maybe the Signals standard can take some inspiration from Reactively's seemingly more efficient implementation going forwards.
+
+I was surprised that several libs hung or ran into memory exceptions running some of the benchmark tests, though they do create fairly deep signal graphs of different shapes and usage patterns to try and stress test things. I'll be following up with isolated repro cases for each of these libs to try and figure out whether they are legitimate bugs or a problem with the benchmark test harness.
 
 ### Preact Signals
 
