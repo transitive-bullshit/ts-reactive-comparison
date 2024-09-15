@@ -118,7 +118,7 @@ Naming-wise, I don't really like `ref` as a name for `signal` especially because
 
 [MobX](https://mobx.js.org) was one of the earliest popular reactive libraries for JS, and I shipped several successful apps with it back in the day, but these days it's suffereing from its own success.
 
-MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM for better tree-shaking. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
+MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
 
 I'd love to see a [major MobX v7 release](https://github.com/mobxjs/mobx/issues/3796) which fixes these issues and drops backwards compatibility. I'd also love to see the MobX maintainers [explore using the Signals standard polyfill](https://github.com/mobxjs/mobx/issues/3854) to help push it along.
 
@@ -130,7 +130,9 @@ Reactive wrappers generally provide access to the underlying value using one of 
 
 ### Shallow vs Deep Reactivity
 
-Another important design decision is **whether reactivity should be shallow or deep**. imho I'd rather have an API that defaults to deep reactivity (with the creation of deep signals being lazy via Proxy-based tracking). You can then expose a shallow API that you can opt-in to instead of defaulting to shallow and having to opt-in to deep tracking. The reason is simple: less cognitive overhead. As an app developer, reasoning about state in a complex app is already complicated enough. I'd rather default to throwing my app state and models into a reactive system and knowing that mutations will "just work" without having to think about whether the shape of my data works with the shallow reactivity contraint – and then only opting in to shallow reactivity as a perf optimization where it makes sense.
+Another important design decision is **whether reactivity should be shallow or deep**.
+
+Personally, I'd rather have an API that defaults to deep reactivity (with the creation of deep signals being lazy via Proxy-based tracking). You can then expose a shallow API that you can opt-in to instead of defaulting to shallow and having to opt-in to deep tracking. The reason is simple: less cognitive overhead. As an app developer, reasoning about state in a complex app is already complicated enough. I'd rather default to throwing my app state and models into a reactive system and knowing that mutations will "just work" without having to think about whether the shape of my data works with the shallow reactivity contraint – and then only opting in to shallow reactivity as a perf optimization where it makes sense.
 
 This is, of course, a subjective preference, and one could easily make the opposite argument. E.g., defaulting to shallow means less magic (aka unseen complexity) lurking in the app's state.
 
