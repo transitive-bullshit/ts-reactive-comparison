@@ -88,7 +88,7 @@ _(this section is largely subjective)_
 
 ### Signals Standard
 
-After putting this comparison together, I feel even more strongly that this ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). There's just so much duplicated work that's not interoperable, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for this ecosystem. 💯
+After putting this comparison together, I feel even more strongly that this ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). Maybe that's just confirmation bias at work, but there's just so much duplicated work across these libs that's not interoperable, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for this ecosystem. 💯
 
 ### Performance
 
@@ -96,9 +96,9 @@ All of the reactive libs offer approximately similar performance on the [benchma
 
 On the negative side of perf, we have [Angular Signals](https://angular.dev/guide/signals) and [signal-polyfill](https://github.com/proposal-signals/signal-polyfill). I'm not surprised that the Signals standard's polyfill has significantly worse perf since it's more of a proof-of-concept and explicitly not production ready. I was surprised, however, at how poorly the perf was of Angular Signals, which is presumably backed by a large team of seasoned Google engineers.
 
-On the positive side of perf, [Reactively](https://github.com/milomg/reactively) was the fastest by far, which makes sense given that the author [@milomg](https://github.com/milomg) also authored most of the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update). It's a shame that the library hasn't been adopted by any team that I'm aware of which could help with maintenance, but maybe the Signals standard can take some inspiration from Reactively's seemingly more efficient implementation going forwards.
+On the positive side of perf, [Reactively](https://github.com/milomg/reactively) was the fastest signals lib (2x faster than the average!), which makes sense given that the author [@milomg](https://github.com/milomg) also authored most of the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update). It's a shame that the `reactively` library hasn't been adopted by any larger projects that I'm aware of which could help with maintenance, but maybe the Signals standard can take some inspiration from Reactively's seemingly more efficient implementation going forwards. The author wrote a [detailed description of his approach here](https://github.com/milomg/reactively/blob/main/Reactive-algorithms.md).
 
-I was surprised that several libs hung or ran into memory exceptions running some of the benchmark tests (notably MobX, Valtio, and even `@vue/reactivity` in one set of tests), though they do create fairly deep signal graphs of different shapes and usage patterns to try and stress test things. I'll be following up with isolated repro cases for each of these libs to try and figure out whether they are legitimate bugs or a problem with the benchmark test harness.
+I was surprised that several popular libs hung or ran into memory exceptions running some of the benchmark tests (notably MobX, Valtio, and even `@vue/reactivity` in one set of tests), though these benchmark testss do create fairly deep signal graphs of different shapes and usage patterns to try and stress test things. I'll be following up with isolated repro cases for each of these libs to try and figure out whether they are legitimate bugs or a problem with the benchmark test harness.
 
 ### Preact Signals
 
