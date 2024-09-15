@@ -80,7 +80,7 @@ Note that MobX and Valtio are not included in the average results summary becaus
 
 Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be very interesting to compare performance of deeply reactive objects / arrays / `Map` / `Set` objects.
 
-These results were last updated _September 2024_ on an M3 Macbook Pro.
+These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1.
 
 ## Takeaways
 
