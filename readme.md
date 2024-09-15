@@ -5,7 +5,13 @@
 - [Reactive Library Comparison](#reactive-library-comparison)
 - [Benchmark Results](#benchmark-results)
 - [Takeaways](#takeaways)
-- [What are Signals?](#what-are-signals)
+  - [Signals Standard](#signals-standard)
+  - [Preact Signals](#preact-signals)
+  - [Vue's Reactivity](#vues-reactivity)
+  - [MobX](#mobx)
+  - [Wrapping Reactive Values](#wrapping-reactive-values)
+  - [Shallow vs Deep Reactivity](#shallow-vs-deep-reactivity)
+- [Related Resources](#related-resources)
 - [License](#license)
 
 ## Intro
@@ -44,9 +50,12 @@ This has the potential to greatly change how the majority of state management is
 | [Valtio](https://github.com/pmndrs/valtio)                                        | ✅                  | ❌                       | ❌               | ✅                                                         | ❌                                   | [7kb](https://pkg-size.dev/valtio)               |
 | [NanoStores](https://github.com/nanostores/nanostores)[^nanostores]               | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [4kb](https://pkg-size.dev/nanostores)           |
 
-We also considered other reactive libraries such as [cellx](https://github.com/Riim/cellx), [reactively](https://github.com/milomg/reactively), [Glimmer's tracked](https://github.com/tracked-tools/tracked-built-ins), [RxJS](https://rxjs.dev), [Starbeam](https://www.starbeamjs.com), [S.js](https://github.com/adamhaile/S), [compostate](https://github.com/lxsmnsyc/compostate), [uSignal](https://github.com/WebReflection/usignal), [Svelte's reactivity](https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/internal/client/reactivity/sources.js)[^svelte-reactivity], [Pota](https://github.com/potahtml/pota), [Kairo](https://github.com/3Shain/kairo), [Compostate](https://github.com/lxsmnsyc/compostate), [mol wire](https://www.npmjs.com/package/mol_wire_lib), [Oby](https://github.com/vobyjs/oby), [Reactively](https://github.com/milomg/reactively), and more, but didn't include them above because they are either not actively maintained, don't support TypeScript, or are not close enough to the signals proposal to warrant comparison.
+I also considered other reactive libraries such as [cellx](https://github.com/Riim/cellx), [reactively](https://github.com/milomg/reactively), [Glimmer's tracked](https://github.com/tracked-tools/tracked-built-ins), [RxJS](https://rxjs.dev), [Starbeam](https://www.starbeamjs.com), [S.js](https://github.com/adamhaile/S), [compostate](https://github.com/lxsmnsyc/compostate), [uSignal](https://github.com/WebReflection/usignal), [Svelte's reactivity](https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/internal/client/reactivity/sources.js)[^svelte-reactivity], [Pota](https://github.com/potahtml/pota), [Kairo](https://github.com/3Shain/kairo), [Compostate](https://github.com/lxsmnsyc/compostate), [mol wire](https://www.npmjs.com/package/mol_wire_lib), [Oby](https://github.com/vobyjs/oby), [Reactively](https://github.com/milomg/reactively), and more, but didn't include them above because they are either not actively maintained, don't support TypeScript, or are not close enough to the signals proposal to warrant comparison.
 
 Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoStores](https://github.com/nanostores/nanostores), and [Jotai](https://jotai.org) don't automatically track dependencies referenced inside of computed properties and effects, which imho makes their relative DX significantly more cumbersome and from my benchmarks, not any faster. The same can also be said for React's own [useEffect](https://react.dev/reference/react/useEffect), which requires the developer to manually declare an effect's dependencies. [Ain't nobody got time for that](https://youtu.be/waEC-8GFTP4?t=25).
+
+> [!NOTE]
+> Did I miss your favorite reactive library, or did I get something wrong on here? [Create an issue](https://github.com/transitive-bullshit/ts-reactive-comparison/issues/new) to let me know 🙂
 
 [^standalone-usage]: Standalone usage refers to how easy it is to use just the reactivity functionality of the library as an isolated package – without being tied to any specific frontend libraries ala React, Vue, Svelte, etc.
 [^signal-utils]: While the official [Signals Proposal](https://github.com/proposal-signals/signal-polyfill) focuses on core dependency tracking of shallow signals, its sister project [signal-utils](https://github.com/proposal-signals/signal-utils) offers support for deep, Proxy-based tracking.
@@ -74,19 +83,51 @@ These results were last updated _September 2024_ on an M3 Macbook Pro.
 
 ## Takeaways
 
-1. The ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). There's just so much duplicated work, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for this ecosystem. 💯
+_(this section is largely subjective)_
 
-2. Several projects have used [Preact Signals](https://github.com/preactjs/signals) as a sort of unofficial standard to build off of because it is lightweight, efficient, and thoroughly tested. **Out of all the shallow, standalone reactive libraries out there, it is imho the best one in terms of DX and maturity**. The only real downside is that it doesn't officially support deep reactivity, which I've found to be extremely valuable as an opt-in feature for real-world usage, especially when using reactivity outside of frontend use cases (like game engines). There are several projects[^preact-deep-signals] which add deep signal support to `@preact/signals-core` via Proxies, but they are less mature and not backed by a large team, meaning that they'd be riskier to depend on in the long run.
+### Signals Standard
 
-3. [Vue's reactivity](https://vuejs.org/guide/essentials/reactivity-fundamentals.html) (`@vue/reactivity`) is imho the most mature and well-maintained TypeScript signals implementation which supports both deep + shallow tracking along with standalone usage. Naming-wise, I don't really like `ref` as a name for `signal` especially because refs already have a well-defined meaning in React land, but this is a minor nit. **Overall, I really like `@vue/reactivity` and will be using it as a base for my work going forwards** until the TC39 Signals Proposal is mature enough to use as a replacement.
+After putting this comparison together, I feel even more strongly that this ecosystem would seriously benefit from a mature [Signals Standard](https://github.com/proposal-signals/signal-polyfill). There's just so much duplicated work that's not interoperable, and complex state management is at the heart of so many apps. Having a standard `Signal` implementation in JavaScript would do wonders for this ecosystem. 💯
 
-4. One important design decision is whether to provide direct access to reactive values (like Vue's [reactive](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#reactive)) or to wrap the reactive value in an accessor (like Vue's [ref](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#ref)). Most reactive libs wrap values in an accessor, even though it makes the DX slightly worse, and [Vue's docs have a great explanation for why](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#limitations-of-reactive). Reactive wrappers generally provide access to the underlying value using one of the following: `wrapper.get()`, `wrapper.value`, `get(wrapper)`, or `wrapper()`, and some support automatic unwrapping when used in JSX or templates and/or at compile-time (like Svelte). ([more info on this pattern from signia](https://signia.tldraw.dev/docs/what-are-signals#how-do-you-access-the-value-of-a-signal))
+### Preact Signals
 
-## What are Signals?
+Several projects have used [Preact Signals](https://github.com/preactjs/signals) as a sort of unofficial standard to build off of because it is lightweight, efficient, and thoroughly tested. **Out of all the shallow reactive libraries which support standalone usage, Preact Signals is imho the best one in terms of DX and maturity**.
 
-Signals are a declarative way to implement reactivity across an application's state. They simplify the management of potentially complex state graphs by making sure that values are automatically recomputed if and only if their dependencies change.
+The only real downside is that it doesn't support deep reactivity, which I've found to be extremely valuable as an opt-in feature for real-world usage, especially when using reactivity outside of frontend use cases (like game engines). There are several projects[^preact-deep-signals] which add deep signal support to `@preact/signals-core` via Proxy-based tracking, but they are less mature and not backed by a large team, which makes me hesitant to adopt them.
 
-Many frontend libraries use this reactivity as a way to only re-render components whenever their dependent state changes, as opposed to relying on the developer to explicitly re-render them which becomes significantly more error-prone as apps get more complex (e.g., React, Vue, Svelte vs jQuery).
+### Vue's Reactivity
+
+[Vue's reactivity](https://vuejs.org/guide/essentials/reactivity-fundamentals.html) (`@vue/reactivity`) is imho the most mature and well-maintained TypeScript signals implementation which supports both deep + shallow tracking along with standalone usage.
+
+Naming-wise, I don't really like `ref` as a name for `signal` especially because refs already have a well-defined meaning in React land, but this is a minor nit.
+
+**Overall, I really like `@vue/reactivity` and will be using it as a base for my work going forwards** until the TC39 Signals Proposal is mature enough to use as a replacement.
+
+### MobX
+
+[MobX](https://mobx.js.org) was one of the earliest popular reactive libraries for JS, and I shipped several successful apps with it back in the day, but these days it's suffereing from its own success.
+
+MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM for better tree-shaking. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
+
+I'd love to see a [major MobX v7 release](https://github.com/mobxjs/mobx/issues/3796) which fixes these issues and drops backwards compatibility. I'd also love to see the MobX maintainers [explore using the Signals standard polyfill](https://github.com/mobxjs/mobx/issues/3854) to help push it along.
+
+### Wrapping Reactive Values
+
+One important design decision is whether to provide direct access to reactive values (like Vue's [reactive](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#reactive)) or to wrap the reactive value in an accessor (like Vue's [ref](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#ref)). Most reactive libs wrap values in an accessor, even though it hurts the DX a bit, and [Vue's docs have a great explanation for why this is a useful tradeoff](https://vuejs.org/guide/essentials/reactivity-fundamentals.html#limitations-of-reactive).
+
+Reactive wrappers generally provide access to the underlying value using one of the following: `wrapper.get()`, `wrapper.value`, `get(wrapper)`, or `wrapper()`, and some support automatic unwrapping when used in JSX or templates and/or at compile-time (like Svelte). ([more info on this pattern from signia](https://signia.tldraw.dev/docs/what-are-signals#how-do-you-access-the-value-of-a-signal))
+
+### Shallow vs Deep Reactivity
+
+Another important design decision is **whether reactivity should be shallow or deep**. imho I'd rather have an API that defaults to deep reactivity (with the creation of deep signals being lazy via Proxy-based tracking). You can then expose a shallow API that you can opt-in to instead of defaulting to shallow and having to opt-in to deep tracking. The reason is simple: less cognitive overhead. As an app developer, reasoning about state in a complex app is already complicated enough. I'd rather default to throwing my app state and models into a reactive system and knowing that mutations will "just work" without having to think about whether the shape of my data works with the shallow reactivity contraint – and then only opting in to shallow reactivity as a perf optimization where it makes sense.
+
+This is, of course, a subjective preference, and one could easily make the opposite argument. E.g., defaulting to shallow means less magic (aka unseen complexity) lurking in the app's state.
+
+It's worth noting that both [Qwik](https://qwik.dev/docs/components/state/#usesignal) and [Solid](https://docs.solidjs.com/concepts/intro-to-reactivity) differentiate between the two approaches by using **shallow signals** and **deep stores**. I think this is a nice compromise, since they're at least separated into different concepts which makes it easier to reason about as long as the shallow signals and deep stores interact in a way that "just works".
+
+Examples of APIs that default to deep reactivity include `@vue/reactivity`'s `ref`, MobX, and Angular. Most of the signal APIs in this comparison default to shallow signals, but that's also because most don't support deep tracking.
+
+## Related Resources
 
 For a more in-depth guide to signals, check out these awesome resources:
 
