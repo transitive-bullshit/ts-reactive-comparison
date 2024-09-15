@@ -116,7 +116,7 @@ Naming-wise, I don't really like `ref` as a name for `signal` especially because
 
 ### MobX
 
-[MobX](https://mobx.js.org) was one of the earliest popular reactive libraries for JS, and I shipped several successful apps with it back in the day, but these days it's suffereing from its own success.
+[MobX](https://mobx.js.org) was one of the earliest reactive JS libraries to gain popularity, and I shipped several successful apps with it back in the day, but these days it's suffering from its own success.
 
 MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
 
