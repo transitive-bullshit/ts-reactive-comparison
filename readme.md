@@ -56,7 +56,7 @@ I also considered other reactive libraries such as [cellx](https://github.com/Ri
 Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoStores](https://github.com/nanostores/nanostores), and [Jotai](https://jotai.org) don't automatically track dependencies referenced inside of computed properties and effects, which imho makes their relative DX significantly more cumbersome and from my benchmarks, not any faster. The same can also be said for React's own [useEffect](https://react.dev/reference/react/useEffect), which requires the developer to manually declare an effect's dependencies. [Ain't nobody got time for that](https://youtu.be/waEC-8GFTP4?t=25).
 
 > [!NOTE]
-> Did I miss your favorite reactive library, or did I get something wrong? [Create an issue](https://github.com/transitive-bullshit/ts-reactive-comparison/issues/new) to let me know 🙂
+> Did I miss your favorite reactive library or get something wrong? Please [create an issue](https://github.com/transitive-bullshit/ts-reactive-comparison/issues/new) to let me know. 🙂
 
 [^standalone-usage]: Standalone usage refers to how easy it is to use just the reactivity functionality of the library as an isolated package – without being tied to any specific frontend libraries ala React, Vue, Svelte, etc.
 [^signal-utils]: While the official [Signals Proposal](https://github.com/proposal-signals/signal-polyfill) focuses on core dependency tracking of shallow signals, its sister project [signal-utils](https://github.com/proposal-signals/signal-utils) offers support for deep, Proxy-based tracking.
