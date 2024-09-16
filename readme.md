@@ -76,7 +76,7 @@ Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoSt
 
 These results are from [my fork](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update) of [@milomg](https://github.com/milomg)'s excellent [js-reactivity-benchmark](https://github.com/milomg/js-reactivity-benchmark), which aggregates signal benchmarks from several libraries together.
 
-Note that MobX and Valtio are not included in the average results summary because they fail to run some of the benchmark tests. Some of the other reactive libraries are missing from the benchmark because they either don't support standalone usage or because they didn't support the benchmark's abstract signals abstraction.
+Note that some reactive libraries are missing from this benchmark because they either don't support standalone usage or because they didn't support the benchmark's abstract signals abstraction.
 
 Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be an interesting extension to compare the performance of deeply reactive objects as well.
 
