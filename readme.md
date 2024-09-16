@@ -46,12 +46,13 @@ This has the potential to greatly change how the majority of state management is
 | [Solid Signals](https://docs.solidjs.com/concepts/intro-to-reactivity)            | ✅                  | ✅[^solid-signals]       | ✅               | [❌](https://github.com/Sawtaytoes/reactjs-solidjs-bridge) | ❌                                   | [21kb](https://pkg-size.dev/solid-js)            |
 | [Qwik Signals](https://qwik.dev/docs/components/state/#usesignal)                 | ✅                  | ✅[^qwik-signals]        | ✅               | ❌?                                                        | ❌                                   | [83kb](https://pkg-size.dev/@builder.io/qwik)    |
 | [Angular Signals](https://angular.dev/guide/signals)                              | ✅                  | ✅                       | ✅               | ❌                                                         | ❌                                   | [360kb](https://pkg-size.dev/@angular/core)      |
+| [Svelte v5 Runes](https://svelte.dev/blog/runes)[^svelte-reactivity]              | ✅                  | ✅                       | ✅               | ❌                                                         | ❌                                   | [35kb](https://pkg-size.dev/@vue/svelte)         |
 | [Signia](https://signia.tldraw.dev/)                                              | ✅                  | ❌                       | ✅               | ✅                                                         | ✅                                   | [9kb](https://pkg-size.dev/signia)               |
 | [NanoStores](https://github.com/nanostores/nanostores)[^nanostores]               | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [4kb](https://pkg-size.dev/nanostores)           |
 | [Jotai](https://jotai.org)                                                        | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [7kb](https://pkg-size.dev/jotai)                |
 | [Valtio](https://github.com/pmndrs/valtio)                                        | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [7kb](https://pkg-size.dev/valtio)               |
 
-I also considered other reactive libraries such as [cellx](https://github.com/Riim/cellx), [reactively](https://github.com/milomg/reactively), [Glimmer's tracked](https://github.com/tracked-tools/tracked-built-ins), [RxJS](https://rxjs.dev), [Starbeam](https://www.starbeamjs.com), [S.js](https://github.com/adamhaile/S), [compostate](https://github.com/lxsmnsyc/compostate), [uSignal](https://github.com/WebReflection/usignal), [Svelte's reactivity](https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/internal/client/reactivity/sources.js)[^svelte-reactivity], [Pota](https://github.com/potahtml/pota), [Kairo](https://github.com/3Shain/kairo), [Compostate](https://github.com/lxsmnsyc/compostate), [mol wire](https://www.npmjs.com/package/mol_wire_lib), [Oby](https://github.com/vobyjs/oby), and more, but didn't include them above because they are either not actively maintained, don't support TypeScript, or are not close enough to the signals proposal to warrant comparison.
+I also considered other reactive libraries such as [cellx](https://github.com/Riim/cellx), [reactively](https://github.com/milomg/reactively), [Glimmer's tracked](https://github.com/tracked-tools/tracked-built-ins), [RxJS](https://rxjs.dev), [Starbeam](https://www.starbeamjs.com), [S.js](https://github.com/adamhaile/S), [compostate](https://github.com/lxsmnsyc/compostate), [uSignal](https://github.com/WebReflection/usignal), [Pota](https://github.com/potahtml/pota), [Kairo](https://github.com/3Shain/kairo), [Compostate](https://github.com/lxsmnsyc/compostate), [mol wire](https://www.npmjs.com/package/mol_wire_lib), [Oby](https://github.com/vobyjs/oby), and more, but didn't include them above because they are either not actively maintained, don't support TypeScript, or are not close enough to the signals proposal to warrant comparison.
 
 Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoStores](https://github.com/nanostores/nanostores), and [Jotai](https://jotai.org) don't automatically track dependencies referenced inside of computed properties and effects, which imho makes their relative DX significantly more cumbersome and from my benchmarks, not any faster. The same can also be said for React's own [useEffect](https://react.dev/reference/react/useEffect), which requires the developer to manually declare an effect's dependencies. [Ain't nobody got time for that](https://youtu.be/waEC-8GFTP4?t=25).
 
@@ -64,23 +65,23 @@ Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoSt
 [^vue-reactivity-react]: [Vue's reactivity system](https://vuejs.org/guide/essentials/reactivity-fundamentals.html) (`@vue/reactivity`) doesn't provide out-of-the-box support for `react`, but it should be possible to integrate via [effectScope](https://vuejs.org/api/reactivity-advanced.html#effectscope) as evidenced by the now deprecated [reactivue project](https://github.com/antfu/reactivue).
 [^solid-signals]: [Solid](https://www.solidjs.com) supports both [shallow signals](https://docs.solidjs.com/concepts/signals) and [deep stores](https://docs.solidjs.com/concepts/stores).
 [^qwik-signals]: [Qwik](https://qwik.dev) supports both [shallow signals](https://qwik.dev/docs/components/state/#usesignal) and [deep stores](https://qwik.dev/docs/components/state/#usestore).
-[^svelte-reactivity]: [Svelte](https://svelte.dev) has embraced reactivity perhaps more than any other frontend framework given that it's [reactive engine](https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/internal/client/reactivity) works at compile-time rather than run-time. This is a really interesting and efficient approach, but it's also tightly coupled with Svelte as a whole and not compatible with general JS/TS usage, which is why we're not including it in this comparison.
+[^svelte-reactivity]: [Svelte](https://svelte.dev) has embraced reactivity perhaps more than any other frontend framework given that it's [v5 reactive engine based on runes](https://svelte.dev/blog/runes) expects compiler support as opposed to direct, standalone usage. This is a really interesting and efficient approach, but it's also tightly coupled with Svelte as a whole and not currently meant for general JS/TS usage outside of Svelte. It is, however, the most performant TS reactivity framework available according to our benchmark results, which is why we've included it in this comparison.
 [^nanostores]: [Nanostores](https://github.com/nanostores/nanostores) is a nice, lean reactivity library, but it's `computed` requires you to explicitly provide a single dependency, making its DX very awkward compared to other libraries which automatically handle any number of dependency subscriptions.
 
 ## Benchmark Results
 
 <p align='center'>
-  <a href="https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update"><img src="https://github.com/user-attachments/assets/a385d3cc-eb14-4c38-86cb-438ea79ab612" alt="Average benchmark results across frameworks"></a>
-  <a href="https://github.com/user-attachments/files/17009283/reactivity-bench-3.csv">Raw results CSV</a> (<em>lower times are better</em>)
+  <a href="https://github.com/transitive-bullshit/js-reactivity-benchmark"><img src="https://github.com/user-attachments/assets/f6d041a1-d5da-4b30-8e60-b4c815ac70bc" alt="Average benchmark results across frameworks"></a>
+  (<em>lower times are better</em>)
 </p>
 
-These results are from [my fork](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update) of [@milomg](https://github.com/milomg)'s excellent [js-reactivity-benchmark](https://github.com/milomg/js-reactivity-benchmark), which aggregates signal benchmarks from several libraries together.
+These results are from [my fork](https://github.com/transitive-bullshit/js-reactivity-benchmark) of [@milomg](https://github.com/milomg)'s excellent [js-reactivity-benchmark](https://github.com/milomg/js-reactivity-benchmark), which aggregates signal benchmarks from several libraries together.
 
 Note that some reactive libraries are missing from this benchmark because they either don't support standalone usage or because they didn't support the benchmark's abstract signals abstraction.
 
 Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be an interesting extension to compare the performance of deeply reactive objects as well.
 
-These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1 ([29d22d6](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/29d22d64666b25aa8268ef8ff30afe8d51bb7937)).
+These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1≥
 
 ## Takeaways
 
@@ -92,13 +93,15 @@ After putting this comparison together, I feel even more strongly that this ecos
 
 ### Performance
 
-All of the reactive libs offer approximately similar performance on the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update) with a few outliers.
+All of the reactive libs offer approximately similar performance on the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark) with a few outliers.
 
 On the negative side of perf, we have [Angular Signals](https://angular.dev/guide/signals) and [signal-polyfill](https://github.com/proposal-signals/signal-polyfill). I'm not surprised that the Signals standard's polyfill has significantly worse perf since it's more of a proof-of-concept and explicitly not production ready. I was surprised, however, at how poorly the perf was of Angular Signals, which is presumably backed by a team of seasoned Google engineers.
 
-On the positive side of perf, [Reactively](https://github.com/milomg/reactively) was the fastest signals lib (2x faster than the average!), which makes sense given that the author [@milomg](https://github.com/milomg) also authored most of the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update). It's a shame that the `reactively` library hasn't been adopted by any larger projects that I'm aware of which could help with maintenance, but maybe the Signals standard can take some inspiration from Reactively's seemingly more efficient implementation going forwards. The author wrote a [detailed description of his approach here](https://github.com/milomg/reactively/blob/main/Reactive-algorithms.md).
+On the positive side of perf, [Svelte v5's beta runes](https://svelte.dev/blog/runes) outperform every other framework by a solid margin (except for the `cellx` benchmark which I'm in contact with the Svelte team to debug). The only unfortunate part of this is that Svelte's reactivity APIs (`$state`, `$derived`, `$effect`, etc) are all private and internal and not officially supported by the Svelte team for standalone, external usage as opposed to, for instance, `@vue/reactivity` which is exposed specifically for this purpose.
 
-I was surprised that several popular libs hung or ran into memory exceptions running some of the benchmark tests (notably MobX, Valtio, and even `@vue/reactivity` in one set of tests), though these benchmark tests do create fairly deep signal graphs of different shapes and usage patterns to try and stress test things. I'll be following up with isolated repro cases for each of these libs to try and figure out whether they are legitimate bugs or a problem with the benchmark test harness.
+Also on the positive side of perf is [Reactively](https://github.com/milomg/reactively), currently the second fastest signals framework, which makes sense given that the author [@milomg](https://github.com/milomg) also authored most of the [benchmark](https://github.com/transitive-bullshit/js-reactivity-benchmark). It's a shame that `reactively` hasn't been adopted by any larger projects that I'm aware of which could help with maintenance, but maybe the Signals standard can take some inspiration from Reactively's seemingly more efficient implementation going forwards. The author wrote a [detailed description of his approach here](https://github.com/milomg/reactively/blob/main/Reactive-algorithms.md).
+
+I was surprised that several popular libs hung or ran into memory exceptions running some of the benchmark tests (notably [Mobx](https://github.com/mobxjs/mobx/issues/3926) and [Valtio](https://github.com/pmndrs/valtio/discussions/949)), though these benchmark tests do create fairly deep signal graphs of different shapes and usage patterns to try and stress test things.
 
 ### Preact Signals
 
@@ -112,13 +115,15 @@ The only real downside is that it doesn't support deep reactivity, which I've fo
 
 Naming-wise, I don't really like `ref` as a name for `signal` especially because refs already have a well-defined meaning in React land, but this is a minor nit.
 
+My benchmarking exposed one [perf issue](https://github.com/vuejs/core/issues/11928) with `@vue/reactivity` which was promptly fixed by the Vue team.
+
 **Overall, I really like `@vue/reactivity` and will be using it as a base for my work going forwards** until the TC39 Signals Proposal is mature enough to use as a replacement.
 
 ### MobX
 
 [MobX](https://mobx.js.org) was one of the earliest reactive JS libraries to gain popularity, and I shipped several successful apps with it back in the day, but these days it's suffering from its own success.
 
-MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
+MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. [MobX is also contains a subtle, but very severe perf footgun](https://github.com/mobxjs/mobx/issues/3926) when used outside of frontend frameworks that was exposed by my benchmarking. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
 
 I'd love to see a [major MobX v7 release](https://github.com/mobxjs/mobx/issues/3796) which fixes these issues and drops backwards compatibility. I'd also love to see the MobX maintainers [explore using the Signals standard polyfill](https://github.com/mobxjs/mobx/issues/3854) to help push it along.
 
