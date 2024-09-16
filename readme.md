@@ -70,17 +70,17 @@ Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoSt
 ## Benchmark Results
 
 <p align='center'>
-	<a href="https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update"><img src="https://github.com/user-attachments/assets/4621879c-fb20-4056-8fd8-f7daa31a07e3" alt="Framework average benchmark results"></a>
-	<a href="https://github.com/user-attachments/files/16992605/reactivity-bench.csv">Raw results CSV</a> (<em>lower times are better</em>)
+  <a href="https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update"><img src="https://github.com/user-attachments/assets/a385d3cc-eb14-4c38-86cb-438ea79ab612" alt="Average benchmark results across frameworks"></a>
+  <a href="https://github.com/user-attachments/files/17009283/reactivity-bench-3.csv">Raw results CSV</a> (<em>lower times are better</em>)
 </p>
 
 These results are from [my fork](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/feature/update) of [@milomg](https://github.com/milomg)'s excellent [js-reactivity-benchmark](https://github.com/milomg/js-reactivity-benchmark), which aggregates signal benchmarks from several libraries together.
 
 Note that MobX and Valtio are not included in the average results summary because they fail to run some of the benchmark tests. Some of the other reactive libraries are missing from the benchmark because they either don't support standalone usage or because they didn't support the benchmark's abstract signals abstraction.
 
-Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be very interesting to compare performance of deeply reactive objects / arrays / `Map` / `Set` objects.
+Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be an interesting extension to compare the performance of deeply reactive objects as well.
 
-These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1.
+These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1 ([c22196a](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/c22196a4f4d2671e35537886233e1c264a7d7070)).
 
 ## Takeaways
 
