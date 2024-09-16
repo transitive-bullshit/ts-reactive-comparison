@@ -80,7 +80,7 @@ Note that some reactive libraries are missing from this benchmark because they e
 
 Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be an interesting extension to compare the performance of deeply reactive objects as well.
 
-These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1 ([c22196a](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/c22196a4f4d2671e35537886233e1c264a7d7070)).
+These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1 ([29d22d6](https://github.com/transitive-bullshit/js-reactivity-benchmark/tree/29d22d64666b25aa8268ef8ff30afe8d51bb7937)).
 
 ## Takeaways
 
