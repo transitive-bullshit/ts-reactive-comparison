@@ -12,6 +12,8 @@
   - [MobX](#mobx)
   - [Wrapping Reactive Values](#wrapping-reactive-values)
   - [Shallow vs Deep Reactivity](#shallow-vs-deep-reactivity)
+  - [Autotracking Dependencies](#autotracking-dependencies)
+  - [Effect Scoping](#effect-scoping)
 - [Related Resources](#related-resources)
 - [License](#license)
 
@@ -46,15 +48,13 @@ This has the potential to greatly change how the majority of state management is
 | [Solid Signals](https://docs.solidjs.com/concepts/intro-to-reactivity)            | ✅                  | ✅[^solid-signals]       | ✅               | [❌](https://github.com/Sawtaytoes/reactjs-solidjs-bridge) | ❌                                   | [21kb](https://pkg-size.dev/solid-js)            |
 | [Qwik Signals](https://qwik.dev/docs/components/state/#usesignal)                 | ✅                  | ✅[^qwik-signals]        | ✅               | ❌?                                                        | ❌                                   | [83kb](https://pkg-size.dev/@builder.io/qwik)    |
 | [Angular Signals](https://angular.dev/guide/signals)                              | ✅                  | ✅                       | ✅               | ❌                                                         | ❌                                   | [360kb](https://pkg-size.dev/@angular/core)      |
-| [Svelte v5 Runes](https://svelte.dev/blog/runes)[^svelte-reactivity]              | ✅                  | ✅                       | ✅               | ❌                                                         | ❌                                   | [35kb](https://pkg-size.dev/@vue/svelte)         |
+| [Svelte v5](https://svelte.dev/blog/runes)[^svelte-reactivity]                    | ✅                  | ✅                       | ✅               | ❌                                                         | ❌                                   | [35kb](https://pkg-size.dev/@vue/svelte)         |
 | [Signia](https://signia.tldraw.dev/)                                              | ✅                  | ❌                       | ✅               | ✅                                                         | ✅                                   | [9kb](https://pkg-size.dev/signia)               |
 | [NanoStores](https://github.com/nanostores/nanostores)[^nanostores]               | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [4kb](https://pkg-size.dev/nanostores)           |
 | [Jotai](https://jotai.org)                                                        | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [7kb](https://pkg-size.dev/jotai)                |
 | [Valtio](https://github.com/pmndrs/valtio)                                        | ✅                  | ❌                       | ❌               | ✅                                                         | ✅                                   | [7kb](https://pkg-size.dev/valtio)               |
 
 I also considered other reactive libraries such as [cellx](https://github.com/Riim/cellx), [reactively](https://github.com/milomg/reactively), [Glimmer's tracked](https://github.com/tracked-tools/tracked-built-ins), [RxJS](https://rxjs.dev), [Starbeam](https://www.starbeamjs.com), [S.js](https://github.com/adamhaile/S), [compostate](https://github.com/lxsmnsyc/compostate), [uSignal](https://github.com/WebReflection/usignal), [Pota](https://github.com/potahtml/pota), [Kairo](https://github.com/3Shain/kairo), [Compostate](https://github.com/lxsmnsyc/compostate), [mol wire](https://www.npmjs.com/package/mol_wire_lib), [Oby](https://github.com/vobyjs/oby), and more, but didn't include them above because they are either not actively maintained, don't support TypeScript, or are not close enough to the signals proposal to warrant comparison.
-
-Some reactive libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoStores](https://github.com/nanostores/nanostores), and [Jotai](https://jotai.org) don't automatically track dependencies referenced inside of computed properties and effects, which imho makes their relative DX significantly more cumbersome and from my benchmarks, not any faster. The same can also be said for React's own [useEffect](https://react.dev/reference/react/useEffect), which requires the developer to manually declare an effect's dependencies. [Ain't nobody got time for that](https://youtu.be/waEC-8GFTP4?t=25).
 
 > [!NOTE]
 > Did I miss your favorite reactive library or get something wrong? Please [create an issue](https://github.com/transitive-bullshit/ts-reactive-comparison/issues/new) to let me know. 🙂
@@ -81,7 +81,7 @@ Note that some reactive libraries are missing from this benchmark because they e
 
 Note also that none of the benchmark tests use deep reactivity of objects, though many of them do test performance on deep graphs of shallow signals. It would be an interesting extension to compare the performance of deeply reactive objects as well.
 
-These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1≥
+These results were last updated _September 2024_ on an M3 Macbook Pro using Node.js v22.4.1.
 
 ## Takeaways
 
@@ -121,9 +121,9 @@ My benchmarking exposed one [perf issue](https://github.com/vuejs/core/issues/11
 
 ### MobX
 
-[MobX](https://mobx.js.org) was one of the earliest reactive JS libraries to gain popularity, and I shipped several successful apps with it back in the day, but these days it's suffering from its own success.
+[MobX](https://mobx.js.org) was one of the earliest reactive JS libraries to gain popularity, and I shipped several successful apps with it back in the day, but these days it seems to be suffering from its own success and backwards compatibility.
 
-MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. [MobX is also contains a subtle, but very severe perf footgun](https://github.com/mobxjs/mobx/issues/3926) when used outside of frontend frameworks that was exposed by my benchmarking. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
+Namely, MobX still [supports non-Proxy-based deep reactivity](https://mobx.js.org/configuration.html#proxy-support) for older browsers. It still [supports legacy decorators](https://mobx.js.org/enabling-decorators.html#using-decorators). It [supports six different patterns for adding reactivity to a class](https://mobx.js.org/observable-state.html). MobX packages don't export ESM. And their list of [caveat limitations](https://mobx.js.org/observable-state.html#limitations) is thoroughly confusing. [MobX is also contains a subtle, but very severe perf footgun](https://github.com/mobxjs/mobx/issues/3926) when used outside of frontend frameworks that was exposed by my benchmarking. This is meant as constructive criticism, fwiw; I know how hard it is to run OSS projects.
 
 I'd love to see a [major MobX v7 release](https://github.com/mobxjs/mobx/issues/3796) which fixes these issues and drops backwards compatibility. I'd also love to see the MobX maintainers [explore using the Signals standard polyfill](https://github.com/mobxjs/mobx/issues/3854) to help push it along.
 
@@ -144,6 +144,20 @@ This is, of course, a subjective preference, and one could easily make the oppos
 It's worth noting that both [Qwik](https://qwik.dev/docs/components/state/#usesignal) and [Solid](https://docs.solidjs.com/concepts/intro-to-reactivity) differentiate between the two approaches by using **shallow signals** and **deep stores**. I think this is a nice compromise, since they're at least separated into different concepts which makes it easier to reason about as long as the shallow signals and deep stores interact in a way that "just works".
 
 Examples of APIs that default to deep reactivity include `@vue/reactivity`'s `ref`, MobX, and Angular. Most of the signal APIs in this comparison default to shallow signals, but that's also because most don't support deep tracking.
+
+### Autotracking Dependencies
+
+Some libraries like [Valtio](https://github.com/pmndrs/valtio), [NanoStores](https://github.com/nanostores/nanostores), and [Jotai](https://jotai.org) don't automatically track dependencies referenced inside of computed properties and effects, which makes their relative DX significantly more cumbersome and from my benchmarks, not any faster. The same can also be said for React's own [useEffect](https://react.dev/reference/react/useEffect), which requires the developer to manually declare an effect's dependencies. [Ain't nobody got time for that](https://youtu.be/waEC-8GFTP4?t=25).
+
+### Effect Scoping
+
+One of the more important but less-visible design considerations is how a framework handles scoping and garbage collection of its reactive dependency graph(s).
+
+Many of these frameworks are optimized for usage in component-based frontend frameworks like React/Vue/Svelte/Angular, and their default effect lifecyles therefore tend to work well out-of-the-box with component lifecycles (mount, render, unmount, etc). When it comes to standalone usage and/or usage outside of a component hierarchy, the ability to define separate root scopes becomes much more important.
+
+[Vue's effectScope RFC](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0041-reactivity-effect-scope.md) provides a great description of the problem and their approach to solving it. Other examples of effect scoping include [Svelte v5's $effect.root](https://svelte-5-preview.vercel.app/docs/runes#$effect-root), [S.js's root](https://github.com/adamhaile/S#computation-roots), and [Solid's createRoot](https://docs.solidjs.com/reference/reactive-utilities/create-root).
+
+Most of these frameworks, however, do not support any sort of effect scoping, meaning that all effects and their respective dependency graphs are shared globally by default.
 
 ## Related Resources
 
